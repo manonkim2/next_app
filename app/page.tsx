@@ -1,8 +1,8 @@
 export default function Home() {
   return (
-    <main className="bg-gray-300 h-screen flex items-center p-5">
-      <div className="bg-white shadow-lg p-5 rounded-2xl w-full">
-        <div className="flex justify-between items-center">
+    <main className="bg-gray-300 h-screen flex items-center p-5 dark:bg-slate-800 sm:bg-red-200 md:bg-green-100">
+      <div className="bg-white shadow-lg p-5 rounded-2xl w-full max-w-screen-sm dark:bg-gray-700">
+        <div className="flex justify-between items-center dark:text-white">
           <div className="flex flex-col">
             <span className="text-gray-600 font-semibold">In transit</span>
             <span className="text-3xl font-bold">Cool blue</span>
@@ -13,10 +13,12 @@ export default function Home() {
         </div>
 
         <div className="flex gap-3 pt-3 pb-3">
-          <span className="bg-green-500 w-20 border-r rounded-xl flex justify-center items-center">
-            <text className="text-sm text-white font-bold">TODAY</text>
+          <span className="bg-green-500 w-20 border-r rounded-xl flex justify-center items-center hover:bg-slate-500">
+            <text className="text-sm text-white font-bold ">TODAY</text>
           </span>
-          <text className="text-md font-bold">9:30 - 10:30</text>
+          <text className="text-md font-bold dark:text-white">
+            9:30 - 10:30
+          </text>
         </div>
 
         <div>
