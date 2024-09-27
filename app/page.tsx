@@ -11,7 +11,6 @@ export default function Home() {
             <text className="text-sm font-bold text-white">cool blue</text>
           </span>
         </div>
-
         <div className="flex gap-3 pb-3 pt-3">
           <span className="flex w-20 items-center justify-center rounded-xl border-r bg-green-500 hover:bg-slate-500">
             <text className="text-sm font-bold text-white">TODAY</text>
@@ -20,7 +19,6 @@ export default function Home() {
             9:30 - 10:30
           </text>
         </div>
-
         <div className="pb-2">
           <div className="relative">
             <div className="absolute h-2 w-full rounded-md bg-slate-200" />
@@ -33,19 +31,38 @@ export default function Home() {
             <text className="text-slate-600">Delevered</text>
           </div>
         </div>
+        {/* has : class에서 해당 상태/속성을 가진 것만 지정 */}
+        <div className="*:outline-none has-[:invalid]:bg-red-100">
+          <input
+            className="peer mb-2 h-10 w-full rounded-full bg-gray-200 pl-5 ring ring-transparent transition-shadow placeholder:drop-shadow focus:ring-green-500 focus:ring-offset-2 invalid:focus:ring-red-500"
+            required
+            type="email"
+            placeholder="Search here..."
+          />
+          <span className="hidden text-sm text-red-700 peer-invalid:block">
+            이메일을 입력하세요.
+          </span>
+          <button className="w-full rounded-full bg-gradient-to-tr from-cyan-500 via-yellow-300 to-orange-500 py-2 text-white peer-invalid:bg-orange-700">
+            Search
+          </button>
+        </div>
 
-        <input
-          className="peer mb-2 h-10 w-full rounded-full bg-gray-200 pl-5 ring ring-transparent transition-shadow placeholder:drop-shadow focus:ring-green-500 focus:ring-offset-2 invalid:focus:ring-red-500"
-          required
-          type="email"
-          placeholder="Search here..."
-        />
-        <span className="hidden text-sm text-red-700 peer-invalid:block">
-          이메일을 입력하세요.
-        </span>
-        <button className="w-full rounded-full bg-gradient-to-tr from-cyan-500 via-yellow-300 to-orange-500 py-2 text-white peer-invalid:bg-orange-700">
-          Search
-        </button>
+        {/* list modifiers : last / odd / even */}
+        <div className="bg-white p-2">
+          <div className="p-3">
+            {['kim', 'lee', 'choi'].map((item, index) => (
+              <div
+                className="flex items-center gap-3 border-b-2 bg-white p-3 last:border-0 odd:bg-purple-300"
+                key={index}
+              >
+                <div className="">{item}</div>
+                <div className="flex size-6 justify-center rounded-full bg-red-600 text-white">
+                  {index}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   )
