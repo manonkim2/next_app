@@ -56,8 +56,33 @@ export default function Home() {
                 key={index}
               >
                 <div className="">{item}</div>
+                <div className="flex size-6 animate-spin justify-center rounded-full bg-red-600 text-white">
+                  🔄
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* skeleton modifiers : animate-pulse */}
+          <div>
+            {[1, 2, 3].map((item) => (
+              <div className="flex items-center gap-4 pt-3 *:animate-pulse">
+                <div className="size-10 rounded-full bg-blue-400" />
+                <div className="h-4 w-40 rounded-full bg-slate-300" />
+              </div>
+            ))}
+          </div>
+
+          {/* animate-ping */}
+          {/* empty */}
+          <div>
+            {[1, 2, 3, ''].map((item) => (
+              <div className="flex items-center gap-4 pt-3">
                 <div className="flex size-6 justify-center rounded-full bg-red-600 text-white">
-                  {index}
+                  {item}
+                </div>
+                <div className="flex size-6 justify-center rounded-full bg-red-600 text-white empty:size-6 empty:animate-pulse empty:bg-blue-400">
+                  {item}
                 </div>
               </div>
             ))}
