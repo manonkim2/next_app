@@ -39,12 +39,10 @@ export default function Home() {
             type="email"
             placeholder="Search here..."
           />
-          <span className="hidden text-sm text-red-700 peer-invalid:block">
+          <span className="text-primary hidden text-sm peer-invalid:block">
             이메일을 입력하세요.
           </span>
-          <button className="w-full rounded-full bg-gradient-to-tr from-cyan-500 via-yellow-300 to-orange-500 py-2 text-white peer-invalid:bg-orange-700">
-            Search
-          </button>
+          <button className="btn">Search</button>
         </div>
 
         {/* list modifiers : last / odd / even */}
@@ -81,7 +79,7 @@ export default function Home() {
                 <div className="flex size-6 justify-center rounded-full bg-red-600 text-white">
                   {item}
                 </div>
-                <div className="flex size-6 justify-center rounded-full bg-red-600 text-white empty:size-6 empty:animate-pulse empty:bg-blue-400">
+                <div className="rounded-very-round flex size-6 justify-center bg-red-600 text-white empty:size-6 empty:animate-pulse empty:bg-blue-400">
                   {item}
                 </div>
               </div>
@@ -90,14 +88,17 @@ export default function Home() {
 
           {/* group */}
           <div className="group flex flex-col">
-            <input placeholder="email" type="email" className="bg-gray-50" />
-            <span className="hidden group-focus-within:block">
+            <input placeholder="email" type="email" />
+            {/* 임의의 값 사용시 대괄호에 넣어서 사용 [18px] */}
+            <span className="hidden text-[18px] group-focus-within:block">
               Make sure it tis a valid email...
             </span>
             <button>Submit</button>
           </div>
         </div>
       </div>
+
+      <input />
     </main>
   )
 }

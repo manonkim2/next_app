@@ -1,3 +1,38 @@
+/* tailwind directive */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 기본 HTML 기본태그에 적용될 default style */
+@layer base {
+  input {
+    @apply font-bold text-blue-500;
+  }
+
+  h1 {
+    color: red;
+  }
+
+  h2 {
+    @apply text-red-50;
+  }
+}
+
+/* 재사용성이 높은 유틸리티 클래스 만들 때 class들을 다같이 추상화하는 컴포넌트 */
+@layer components {
+  .select-dropdown {
+    @apply rounded-b-lg shadow-md;
+  }
+}
+
+/* application 모든곳에서 사용할 수 있는 new class */
+@layer utilities {
+  .text-bigger {
+    @apply text-3xl font-semibold;
+  }
+}
+
+/* apply : css 재사용 하고싶을때*/
+.btn {
+  @apply w-full rounded-full bg-gradient-to-tr from-cyan-500 via-yellow-300 to-orange-500 py-2 text-white peer-invalid:bg-orange-700;
+}
