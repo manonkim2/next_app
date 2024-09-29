@@ -3,6 +3,7 @@ interface IFormInputProps {
   placeholder: string
   required: boolean
   errors: string[]
+  name: string
 }
 
 const FormInput = ({
@@ -10,6 +11,7 @@ const FormInput = ({
   placeholder,
   required,
   errors,
+  name,
 }: IFormInputProps) => {
   return (
     <div>
@@ -18,6 +20,7 @@ const FormInput = ({
         type={type}
         required={required}
         placeholder={placeholder}
+        name={name}
       />
       {errors.map((error, index) => (
         <span key={index} className="font-medium text-red-500">
