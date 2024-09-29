@@ -2,7 +2,7 @@ interface IFormInputProps {
   type: string
   placeholder: string
   required: boolean
-  errors: string[]
+  errors?: string[]
   name: string
 }
 
@@ -22,7 +22,7 @@ const FormInput = ({
         placeholder={placeholder}
         name={name}
       />
-      {errors.map((error, index) => (
+      {errors?.map((error, index) => (
         <span key={index} className="font-medium text-red-500">
           {error}
         </span>
