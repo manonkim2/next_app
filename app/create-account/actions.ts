@@ -1,9 +1,6 @@
 'use server'
+import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from '@/lib/constants'
 import { z } from 'zod'
-
-const passwordRegex = new RegExp(
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/,
-)
 
 const checkUsername = (username: string) => !username.includes('hello')
 const checkPasswords = ({
@@ -29,12 +26,8 @@ const formSchema = z
       .transform((username) => `%${username}`)
       .refine(checkUsername, 'hello안됨'),
     email: z.string().email({ message: '이메일이 유효하지않습니다.' }),
-    password: z
-      .string()
-      .min(3)
-      .max(10)
-      .regex(passwordRegex, '대문자, 소문자, 숫자, 특수문자를 포함해주세요.'),
-    confirm_password: z.string().min(3).max(10),
+    password: z.string().max(10).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    confirm_password: z.string().max(10),
   })
   .refine(checkPasswords, {
     message: '비밀번호 노일치',
