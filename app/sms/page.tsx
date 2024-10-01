@@ -7,10 +7,12 @@ import { smsVerification } from './actions'
 
 const initailState = {
   token: false,
+  error: undefined,
 }
 
 const SMSLogin = () => {
   const [state, action] = useFormState(smsVerification, initailState)
+  console.log('🚀 ~ SMSLogin ~ state:', state)
 
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
@@ -23,19 +25,21 @@ const SMSLogin = () => {
           type="text"
           placeholder="Phone number"
           required
-          errors={[]}
           name="phone"
+          errors={state.error?.formErrors}
         />
-        <Input
-          type="number"
-          placeholder="Verification code"
-          required
-          errors={[]}
-          name="token"
-          min={100000}
-          max={999999}
-        />
-        <Button text="Verify" />
+        {state.token ? (
+          <Input
+            type="number"
+            placeholder="Verification code"
+            required
+            name="token"
+            min={100000}
+            max={999999}
+            errors={state.error?.formErrors}
+          />
+        ) : null}
+        <Button text={state.token ? '토큰 인증하기' : 'sms 보내기'} />
       </form>
     </div>
   )
