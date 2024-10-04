@@ -1,5 +1,6 @@
 'use server'
 import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from '@/lib/constants'
+import db from '@/lib/db'
 import { z } from 'zod'
 
 const checkUsername = (username: string) => !username.includes('hello')
@@ -23,7 +24,6 @@ const formSchema = z
       .toLowerCase()
       //   공백 제거
       .trim()
-      .transform((username) => `%${username}`)
       .refine(checkUsername, 'hello안됨'),
     email: z.string().email({ message: '이메일이 유효하지않습니다.' }),
     password: z.string().max(10).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
@@ -49,6 +49,36 @@ export async function createAccount(prevState: any, formData: FormData) {
   if (!result.success) {
     return result.error.flatten()
   } else {
-    console.log(result.data)
+    const username = await db.user.findUnique({
+      where: {
+        username: result.data.username,
+      },
+      select: {
+        id: true,
+      },
+    })
+    if (username) {
+      // show an error
+    }
+
+    const userEmail = await db.user.findUnique({
+      where: {
+        email: result.data.email,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (userEmail) {
+      // show an error
+    }
+
+    // 1. username이 사용되고 있는지 확인
+    // 2. email이 사용되고 있는지 확인
+    // 3. hash password
+    // 4. db에 user 저장
+    // 5. User를 logIn
+    // 6. redirect /home
   }
 }
