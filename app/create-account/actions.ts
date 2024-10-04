@@ -2,6 +2,7 @@
 import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from '@/lib/constants'
 import db from '@/lib/db'
 import { z } from 'zod'
+import bcrypt from 'bcrypt'
 
 const checkUsername = (username: string) => !username.includes('hello')
 const checkPasswords = ({
@@ -82,7 +83,21 @@ export async function createAccount(prevState: any, formData: FormData) {
   if (!result.success) {
     return result.error.flatten()
   } else {
-    // 검증코드는 zod에서 모두 처리
+    // password hash
+    const hashedPassword = await bcrypt.hash(result.data.password, 12)
+
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    console.log(user)
     // 1. username이 사용되고 있는지 확인
     // 2. email이 사용되고 있는지 확인
     // 3. hash password
