@@ -11,6 +11,35 @@ const checkPasswords = ({
   password: string
   confirm_password: string
 }) => password === confirm_password
+const checkUniqueName = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  // if (user) {
+  //   return false
+  // } else {
+  //   return true
+  // }
+  return !Boolean(user)
+}
+const checkUniqueEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email: email,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  return !Boolean(user)
+}
 
 const formSchema = z
   .object({
@@ -24,8 +53,12 @@ const formSchema = z
       .toLowerCase()
       //   공백 제거
       .trim()
-      .refine(checkUsername, 'hello안됨'),
-    email: z.string().email({ message: '이메일이 유효하지않습니다.' }),
+      .refine(checkUsername, 'hello안됨')
+      .refine(checkUniqueName, '이미 사용되고 있는 이름입니다.'),
+    email: z
+      .string()
+      .email({ message: '이메일이 유효하지않습니다.' })
+      .refine(checkUniqueEmail, '이미 사용되고 있는 이메일 입니다.'),
     password: z.string().max(10).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().max(10),
   })
@@ -44,36 +77,12 @@ export async function createAccount(prevState: any, formData: FormData) {
 
   //   parse -> throws ZodError
   //   safeParse -> doesn't throw error
-  const result = formSchema.safeParse(data)
+  const result = await formSchema.safeParseAsync(data)
 
   if (!result.success) {
     return result.error.flatten()
   } else {
-    const username = await db.user.findUnique({
-      where: {
-        username: result.data.username,
-      },
-      select: {
-        id: true,
-      },
-    })
-    if (username) {
-      // show an error
-    }
-
-    const userEmail = await db.user.findUnique({
-      where: {
-        email: result.data.email,
-      },
-      select: {
-        id: true,
-      },
-    })
-
-    if (userEmail) {
-      // show an error
-    }
-
+    // 검증코드는 zod에서 모두 처리
     // 1. username이 사용되고 있는지 확인
     // 2. email이 사용되고 있는지 확인
     // 3. hash password
