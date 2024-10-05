@@ -3,6 +3,9 @@ import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from '@/lib/constants'
 import db from '@/lib/db'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
+import { getIronSession } from 'iron-session'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 const checkUsername = (username: string) => !username.includes('hello')
 const checkPasswords = ({
@@ -97,12 +100,17 @@ export async function createAccount(prevState: any, formData: FormData) {
       },
     })
 
-    console.log(user)
-    // 1. username이 사용되고 있는지 확인
-    // 2. email이 사용되고 있는지 확인
-    // 3. hash password
-    // 4. db에 user 저장
-    // 5. User를 logIn
-    // 6. redirect /home
+    // login : 반환받은 id값을 담은 cookie를 전달
+    const cookie = await getIronSession(cookies(), {
+      cookieName: 'carrot-login',
+      // ! : env안에 해당값 무조건 존재한다고 ts에 알려줌
+      password: process.env.COOKIE_PASSWORD!,
+    })
+    console.log(cookie)
+    // @ts-ignore
+    cookie.id = user.id
+    await cookie.save()
+
+    redirect('/profile')
   }
 }
