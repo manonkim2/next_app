@@ -3,9 +3,8 @@ import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from '@/lib/constants'
 import db from '@/lib/db'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
-import { getIronSession } from 'iron-session'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import getSession from '@/lib/session'
 
 const checkUsername = (username: string) => !username.includes('hello')
 const checkPasswords = ({
@@ -81,7 +80,7 @@ export async function createAccount(prevState: any, formData: FormData) {
 
   //   parse -> throws ZodError
   //   safeParse -> doesn't throw error
-  const result = await formSchema.safeParseAsync(data)
+  const result = await formSchema.spa(data)
 
   if (!result.success) {
     return result.error.flatten()
@@ -100,16 +99,10 @@ export async function createAccount(prevState: any, formData: FormData) {
       },
     })
 
-    // login : 반환받은 id값을 담은 cookie를 전달
-    const cookie = await getIronSession(cookies(), {
-      cookieName: 'carrot-login',
-      // ! : env안에 해당값 무조건 존재한다고 ts에 알려줌
-      password: process.env.COOKIE_PASSWORD!,
-    })
-    console.log(cookie)
     // @ts-ignore
-    cookie.id = user.id
-    await cookie.save()
+    const session = await getSession()
+    session.id = user.id
+    await session.save()
 
     redirect('/profile')
   }
