@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'
 import getSession from '@/lib/session'
 
-const checkUsername = (username: string) => !username.includes('hello')
 const checkPasswords = ({
   password,
   confirm_password,
@@ -14,35 +13,6 @@ const checkPasswords = ({
   password: string
   confirm_password: string
 }) => password === confirm_password
-const checkUniqueName = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  })
-
-  // if (user) {
-  //   return false
-  // } else {
-  //   return true
-  // }
-  return !Boolean(user)
-}
-const checkUniqueEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email: email,
-    },
-    select: {
-      id: true,
-    },
-  })
-
-  return !Boolean(user)
-}
 
 const formSchema = z
   .object({
@@ -55,15 +25,70 @@ const formSchema = z
       .max(10, '너무 길어요')
       .toLowerCase()
       //   공백 제거
-      .trim()
-      .refine(checkUsername, 'hello안됨')
-      .refine(checkUniqueName, '이미 사용되고 있는 이름입니다.'),
-    email: z
-      .string()
-      .email({ message: '이메일이 유효하지않습니다.' })
-      .refine(checkUniqueEmail, '이미 사용되고 있는 이메일 입니다.'),
+      .trim(),
+    email: z.string().email({ message: '이메일이 유효하지않습니다.' }),
     password: z.string().max(10).regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().max(10),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '이미 존재하는 유저입니다.',
+        path: ['username'],
+        fatal: true,
+      })
+      return z.NEVER
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '이미 존재하는 이메일입니다.',
+        path: ['email'],
+        fatal: true,
+      })
+      return z.NEVER
+    }
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '이미 존재하는 유저입니다.',
+        path: ['username'],
+        fatal: true,
+      })
+      return z.NEVER
+    }
   })
   .refine(checkPasswords, {
     message: '비밀번호 노일치',
