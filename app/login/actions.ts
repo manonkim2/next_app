@@ -58,6 +58,7 @@ export const logIn = async (prevState: any, formData: FormData) => {
     if (ok) {
       const session = await getSession()
       session.id = user!.id
+      session.save()
       redirect('/profile')
     }
     return {
