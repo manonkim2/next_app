@@ -1,5 +1,10 @@
 import db from '@/lib/db'
-import { getAccessToken, getUserEmail, getUserInfo } from '@/lib/githubAuth'
+import {
+  getAccessToken,
+  getUserEmail,
+  getUserInfo,
+  returnUserInfo,
+} from '@/lib/githubAuth'
 import { isLogin } from '@/lib/isLogin'
 
 import { notFound, redirect, useSearchParams } from 'next/navigation'
@@ -14,7 +19,9 @@ export async function GET(request: NextRequest) {
 
   const accessToken = await getAccessToken(code)
 
-  const { login, id, avatar_url } = await getUserInfo(accessToken)
+  const { login, id, avatar_url } = (await getUserInfo(
+    accessToken,
+  )) as returnUserInfo
   const email = await getUserEmail(accessToken)
 
   const newUser = await db.user.create({
@@ -30,4 +37,6 @@ export async function GET(request: NextRequest) {
   })
 
   await isLogin(newUser.id)
+
+  return redirect('/profile')
 }

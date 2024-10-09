@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import db from './db'
 import { isLogin } from './isLogin'
 
@@ -26,7 +27,15 @@ export const getAccessToken = async (code: string) => {
   return access_token
 }
 
-export const getUserInfo = async (accessToken: string) => {
+export interface returnUserInfo {
+  login: string
+  id: number
+  avatar_url: string
+}
+
+export const getUserInfo = async (
+  accessToken: string,
+): Promise<returnUserInfo | ReturnType<typeof isLogin>> => {
   const userProfileResponse = await fetch('https://api.github.com/user', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -48,8 +57,8 @@ export const getUserInfo = async (accessToken: string) => {
   })
 
   if (user) {
-    alert('유저 있음')
-    return isLogin(user.id)
+    await isLogin(user.id)
+    return redirect('/profile')
   }
 
   return { login, id, avatar_url }
