@@ -20,13 +20,15 @@ const SMSLogin = () => {
         <h2 className="text-xl">Verify your phone number.</h2>
       </div>
       <form className="flex flex-col gap-3" action={action}>
-        <Input
-          type="text"
-          placeholder="Phone number"
-          required
-          name="phone"
-          errors={state.error?.formErrors}
-        />
+        {!state.token && (
+          <Input
+            type="text"
+            placeholder="Phone number"
+            required
+            name="phone"
+            errors={state.error?.formErrors}
+          />
+        )}
         {state.token ? (
           <Input
             type="number"
