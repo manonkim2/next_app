@@ -3,7 +3,7 @@
 import Button from '@/components/button'
 import Input from '@/components/input'
 import { useFormState } from 'react-dom'
-import { smsVerification } from './actions'
+import { smsLogin } from './actions'
 
 const initailState = {
   token: false,
@@ -11,8 +11,7 @@ const initailState = {
 }
 
 const SMSLogin = () => {
-  const [state, action] = useFormState(smsVerification, initailState)
-  console.log('🚀 ~ SMSLogin ~ state:', state)
+  const [state, action] = useFormState(smsLogin, initailState)
 
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
