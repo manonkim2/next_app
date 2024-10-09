@@ -1,4 +1,8 @@
-import { notFound, useSearchParams } from 'next/navigation'
+import db from '@/lib/db'
+import { getAccessToken, getUserEmail, getUserInfo } from '@/lib/githubAuth'
+import { isLogin } from '@/lib/isLogin'
+
+import { notFound, redirect, useSearchParams } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -8,26 +12,22 @@ export async function GET(request: NextRequest) {
     return notFound()
   }
 
-  const accessTokenParams = new URLSearchParams({
-    client_id: process.env.GITHUB_CLIENT_ID!,
-    client_secret: process.env.GITHUB_CLIENT_SECRET!,
-    code,
-  }).toString()
-  const accessTokenUrl = `https://github.com/login/oauth/access_token?${accessTokenParams}`
+  const accessToken = await getAccessToken(code)
 
-  const accessTokenResponse = await fetch(accessTokenUrl, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
+  const { login, id, avatar_url } = await getUserInfo(accessToken)
+  const email = await getUserEmail(accessToken)
+
+  const newUser = await db.user.create({
+    data: {
+      username: `${login}-github`,
+      github_id: id + '',
+      avatar: avatar_url,
+      email,
+    },
+    select: {
+      id: true,
     },
   })
-  const accessToken = await accessTokenResponse.json()
 
-  if ('error' in accessToken) {
-    return new Response(null, {
-      status: 400,
-    })
-  }
-
-  return Response.json({ accessToken })
+  await isLogin(newUser.id)
 }
