@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import validator from 'validator'
 import { redirect } from 'next/navigation'
+import twilio from 'twilio'
 import db from '@/lib/db'
 import crypto from 'crypto'
 import { isLogin } from '@/lib/isLogin'
@@ -95,6 +96,15 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
           },
         },
       })
+
+      const client = twilio(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
+
+      await client.messages.create({
+        body: `너의 코드는 ${token} 이다.`,
+        to: process.env.TWILIO_MY_PHONE_NUMBER!,
+        from: process.env.TWILIO_PHONE_NUMBER!,
+      })
+
       return {
         token: true,
       }
