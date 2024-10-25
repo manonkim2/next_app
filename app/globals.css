@@ -9,10 +9,6 @@
     @apply font-bold text-blue-500;
   }
 
-  h1 {
-    color: red;
-  }
-
   h2 {
     @apply text-red-50;
   }

@@ -21,7 +21,7 @@ const TabBar = () => {
   const pathname = usePathname()
 
   return (
-    <div className="fixed bottom-0 mx-auto grid w-full max-w-screen-md grid-cols-5 border-t border-neutral-600 px-5 py-3 *:text-white">
+    <div className="fixed bottom-0 mx-auto grid w-full max-w-screen-md grid-cols-5 border-t border-neutral-600 bg-neutral-900 px-5 py-3 *:text-white">
       <Link href="/products" className="flex flex-col items-center gap-px">
         {pathname === '/products' ? (
           <HomeModernIcon className="h-6 w-6" />
