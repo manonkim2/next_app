@@ -1,13 +1,30 @@
-interface IProductsProps {}
+import ListProduct from '@/components/list-product'
+import db from '@/lib/db'
 
 const getProducts = async () => {
-  await new Promise((res) => setTimeout(res, 10000))
+  const products = await db.product.findMany({
+    select: {
+      title: true,
+      price: true,
+      created_at: true,
+      photo: true,
+      id: true,
+    },
+  })
+
+  return products
 }
 
-const Products = async ({}: IProductsProps) => {
+const Products = async () => {
   const products = await getProducts()
 
-  return <div>Products</div>
+  return (
+    <div className="flex flex-col gap-3 p-5">
+      {products.map((product) => (
+        <ListProduct key={product.id} {...product} />
+      ))}
+    </div>
+  )
 }
 
 export default Products
