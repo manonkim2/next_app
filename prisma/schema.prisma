@@ -18,6 +18,7 @@ model User {
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   SMSToken   SMSToken[]
+  Product    Product[]
 }
 
 model SMSToken {
@@ -26,5 +27,20 @@ model SMSToken {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+}
+
+model Product {
+  // Integer : 정수
+  id          Int    @id @default(autoincrement())
+  title       String
+  // Float : 소수점 아래 7자리까지 표현
+  price       Float
+  photo       String
+  description String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
   userId     Int
 }
