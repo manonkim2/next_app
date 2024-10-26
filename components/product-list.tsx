@@ -64,9 +64,7 @@ const ProductList = ({ initialProducts }: IProductListProps) => {
         //   text={loading ? '로딩 중' : '더보기'}
         //   onClick={handleOnClickMore}
         // />
-        <span ref={trigger} style={{ marginTop: `${page + 1 * 900}vh` }}>
-          {loading ? '로딩 중' : '더보기'}
-        </span>
+        <span ref={trigger}>{loading ? '로딩 중' : '더보기'}</span>
       )}
     </div>
   )
