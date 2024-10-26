@@ -34,6 +34,17 @@ const getProduct = async (id: number) => {
   return product
 }
 
+// todo : 삭제기능
+// const deleteProduct = async (id: number) => {
+//   await db.product.deleteMany({
+//     where: {
+//       userId: id,
+//     },
+//   })
+
+//   alert('삭제되었습니다.')
+// }
+
 const ProductDetail = async ({ params }: { params: { id: string } }) => {
   const id = Number(params.id)
 
@@ -42,7 +53,6 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
   }
 
   const product = await getProduct(id)
-  console.log('🚀 ~ ProductDetail ~ product:', product)
 
   if (!product) {
     return notFound()
@@ -53,11 +63,16 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
   return (
     <div>
       <div className="relative aspect-square">
-        <Image fill src={product.photo} alt={product.title} />
+        <Image
+          fill
+          src={product.photo}
+          alt={product.title}
+          className="object-contain"
+        />
       </div>
 
       <div className="flex items-center gap-3 border-b border-neutral-700 px-3 py-4">
-        <div className="size-10 rounded-full">
+        <div className="size-10 overflow-hidden rounded-full">
           {product.user.avatar ? (
             <Image
               width={80}
@@ -83,7 +98,10 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
         </span>
         <div>
           {isOwner && (
-            <button className="font-semimix-blend-color-dodge mr-2 rounded-md bg-red-500 p-2">
+            <button
+              className="font-semimix-blend-color-dodge mr-2 rounded-md bg-red-500 p-2"
+              // onClick={() => deleteProduct(product.userId)}
+            >
               삭제하기
             </button>
           )}

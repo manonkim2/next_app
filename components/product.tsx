@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { formatToTimeAgo, formatToWon } from '@/lib/utils'
 
-interface IListProductProps {
+interface IProductProps {
   title: string
   price: number
   created_at: Date
@@ -10,17 +10,11 @@ interface IListProductProps {
   id: number
 }
 
-const ListProduct = ({
-  title,
-  price,
-  created_at,
-  photo,
-  id,
-}: IListProductProps) => {
+const Product = ({ title, price, created_at, photo, id }: IProductProps) => {
   return (
     <Link href={`/products/${id}`} className="flex gap-5">
       <div className="relative size-28 overflow-hidden rounded-md">
-        <Image src={photo} alt="product-img" fill />
+        <Image src={photo} alt="product-img" fill className="object-cover" />
       </div>
       <div className="flex flex-col gap-1 *:text-white">
         <span className="text-lg">{title}</span>
@@ -33,4 +27,4 @@ const ListProduct = ({
   )
 }
 
-export default ListProduct
+export default Product

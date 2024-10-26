@@ -1,5 +1,6 @@
-import ListProduct from '@/components/list-product'
+import ProductList from '@/components/product-list'
 import db from '@/lib/db'
+import { Prisma } from '@prisma/client'
 
 const getProducts = async () => {
   const products = await db.product.findMany({
@@ -10,21 +11,28 @@ const getProducts = async () => {
       photo: true,
       id: true,
     },
+    // 몇 개씩 가져올건지
+    take: 1,
+    // 정렬순서
+    orderBy: {
+      created_at: 'desc',
+    },
   })
 
   return products
 }
 
-const Products = async () => {
+// prisma의 return 값으로 type 유추
+export type ProductsType = Prisma.PromiseReturnType<typeof getProducts>
+
+const ProductsPage = async () => {
   const products = await getProducts()
 
   return (
-    <div className="flex flex-col gap-3 p-5">
-      {products.map((product) => (
-        <ListProduct key={product.id} {...product} />
-      ))}
+    <div>
+      <ProductList initialProducts={products} />
     </div>
   )
 }
 
-export default Products
+export default ProductsPage
