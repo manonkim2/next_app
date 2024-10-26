@@ -2,7 +2,7 @@
 
 import db from '@/lib/db'
 
-export const getMoreProducts = async () => {
+export const getMoreProducts = async (page: number) => {
   const products = await db.product.findMany({
     select: {
       title: true,
@@ -13,7 +13,7 @@ export const getMoreProducts = async () => {
     },
     // 몇 개씩 가져올건지
     take: 1,
-    skip: 1,
+    skip: 1 * page,
     // 정렬순서
     orderBy: {
       created_at: 'desc',

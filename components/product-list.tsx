@@ -12,13 +12,21 @@ interface IProductListProps {
 
 const ProductList = ({ initialProducts }: IProductListProps) => {
   const [products, setproducts] = useState(initialProducts)
+  const [lastProduct, setLastProduct] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   const handleOnClickMore = async () => {
     setLoading(true)
-    const products = await getMoreProducts()
-    setproducts((prev) => [...prev, ...products])
+    const newProducts = await getMoreProducts(page + 1)
+
+    if (newProducts.length !== 0) {
+      setPage((page) => page + 1)
+      setproducts((prev) => [...prev, ...newProducts])
+    } else {
+      setLastProduct(true)
+    }
+
     setLoading(false)
   }
 
@@ -28,10 +36,12 @@ const ProductList = ({ initialProducts }: IProductListProps) => {
         <Product key={product.id} {...product} />
       ))}
 
-      <Button
-        text={loading ? '로딩 중' : '더보기'}
-        onClick={handleOnClickMore}
-      />
+      {!lastProduct && (
+        <Button
+          text={loading ? '로딩 중' : '더보기'}
+          onClick={handleOnClickMore}
+        />
+      )}
     </div>
   )
 }
