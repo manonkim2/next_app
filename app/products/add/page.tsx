@@ -5,12 +5,14 @@ import Input from '@/components/input'
 import { PhotoIcon } from '@heroicons/react/24/outline'
 import React, { useState } from 'react'
 import { useFormState } from 'react-dom'
-import { uploadProduct } from './actions'
+import { getUploadUrl, uploadProduct } from './actions'
 
 const AddProductsPage = () => {
   const [preview, setPreview] = useState('')
+  const [uploadUrl, setUploadUrl] = useState('')
   const [state, action] = useFormState(uploadProduct, null)
 
+  // public 폴더에 업로드
   const onChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
@@ -41,6 +43,29 @@ const AddProductsPage = () => {
      */
     const url = URL.createObjectURL(file)
     setPreview(url)
+  }
+
+  // cloudflare에 업로드
+  const onChangeImageCloud = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const {
+      target: { files },
+    } = event
+
+    if (!files) {
+      return
+    }
+
+    const file = files[0]
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+
+    const { success, result } = await getUploadUrl()
+    if (success) {
+      const { id, uploadUrl } = result
+      setUploadUrl(uploadUrl)
+    }
   }
 
   return (
