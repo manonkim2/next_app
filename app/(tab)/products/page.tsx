@@ -2,9 +2,11 @@ import ProductList from '@/components/product-list'
 import db from '@/lib/db'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Prisma } from '@prisma/client'
+import { unstable_cache as nextCache } from 'next/cache'
 import Link from 'next/link'
 
 const getProducts = async () => {
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
   const products = await db.product.findMany({
     select: {
       title: true,
@@ -24,11 +26,16 @@ const getProducts = async () => {
   return products
 }
 
+const getCachedProducts = nextCache(getProducts, ['home-products'], {
+  //60초 마다 실행되는것이 아니라, 60초 후에 새로고침 등이 일어나면 재요청 일어남
+  revalidate: 60,
+})
+
 // prisma의 return 값으로 type 유추
 export type ProductsType = Prisma.PromiseReturnType<typeof getProducts>
 
 const ProductsPage = async () => {
-  const products = await getProducts()
+  const products = await getCachedProducts()
 
   return (
     <div>
