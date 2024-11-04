@@ -2,7 +2,7 @@ import ProductList from '@/components/product-list'
 import db from '@/lib/db'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Prisma } from '@prisma/client'
-import { unstable_cache as nextCache } from 'next/cache'
+import { unstable_cache as nextCache, revalidatePath } from 'next/cache'
 import Link from 'next/link'
 
 const getProducts = async () => {
@@ -26,20 +26,25 @@ const getProducts = async () => {
   return products
 }
 
-const getCachedProducts = nextCache(getProducts, ['home-products'], {
-  //60초 마다 실행되는것이 아니라, 60초 후에 새로고침 등이 일어나면 재요청 일어남
-  revalidate: 60,
-})
+const getCachedProducts = nextCache(getProducts, ['home-products'])
 
 // prisma의 return 값으로 type 유추
 export type ProductsType = Prisma.PromiseReturnType<typeof getProducts>
 
 const ProductsPage = async () => {
   const products = await getCachedProducts()
+  const revalidate = async () => {
+    'use server'
+    // 경로와 연관되어있는 모든 데이터 새로고침
+    revalidatePath('/home')
+  }
 
   return (
     <div>
       <ProductList initialProducts={products} />
+      <form action={revalidate}>
+        <button>Revalidate</button>
+      </form>
       <Link
         href="/products/add"
         className="fixed bottom-24 right-8 flex size-8 items-center justify-center rounded-full bg-orange-500 p-1 transition-colors hover:bg-orange-400"
