@@ -2,7 +2,7 @@ import ProductList from '@/components/product-list'
 import db from '@/lib/db'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Prisma } from '@prisma/client'
-import { unstable_cache as nextCache, revalidatePath } from 'next/cache'
+import { unstable_cache as nextCache, revalidateTag } from 'next/cache'
 import Link from 'next/link'
 
 const getProducts = async () => {
@@ -26,7 +26,9 @@ const getProducts = async () => {
   return products
 }
 
-const getCachedProducts = nextCache(getProducts, ['home-products'])
+const getCachedProducts = nextCache(getProducts, ['product-detail'], {
+  tags: ['product-detail'],
+})
 
 // prisma의 return 값으로 type 유추
 export type ProductsType = Prisma.PromiseReturnType<typeof getProducts>
@@ -36,7 +38,7 @@ const ProductsPage = async () => {
   const revalidate = async () => {
     'use server'
     // 경로와 연관되어있는 모든 데이터 새로고침
-    revalidatePath('/home')
+    revalidateTag('product-detail')
   }
 
   return (
