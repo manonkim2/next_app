@@ -64,6 +64,7 @@ export const logIn = async (prevState: any, formData: FormData) => {
     return {
       fieldErrors: {
         password: ['패스워드가 잘못 입력되었습니다.'],
+        email: ['이메일이 잘못 입력되었습니다.'],
       },
     }
   }
