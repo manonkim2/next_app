@@ -7,7 +7,10 @@ import Link from 'next/link'
 
 // 해당 페이지를 dynamic한 페이지로 강제 지정 => 기본 caching기능 사용안함
 // ƒ  (Dynamic)  server-rendered on demand
-export const dynamic = 'force-dynamic'
+// export const dynamic = 'force-dynamic'
+
+// static한 페이지이지만 60초후에 재검증을해서 새로운 req를 받게됨
+export const revalidate = 60
 
 const getProducts = async () => {
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
