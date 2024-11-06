@@ -2,28 +2,23 @@ import ProductList from '@/components/product-list'
 import db from '@/lib/db'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Prisma } from '@prisma/client'
-import { unstable_cache as nextCache, revalidateTag } from 'next/cache'
+import {
+  unstable_cache as nextCache,
+  revalidateTag,
+  revalidatePath,
+} from 'next/cache'
 import Link from 'next/link'
 
 const getProducts = async () => {
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
-  const products = await db.product.findMany({
-    select: {
-      title: true,
-      price: true,
-      created_at: true,
-      photo: true,
-      id: true,
-    },
-    // 몇 개씩 가져올건지
-    take: 1,
-    // 정렬순서
-    orderBy: {
-      created_at: 'desc',
+  // next에서 fetch를 할 때에는 자동으로 캐싱기능이 제공됨 (unstable_cache와 같은 기능)
+  // revalidate나 tag기능도 사용가능
+  // GET 일때만 caching (cookies나 headers를 사용하는 request caching 안함 X)
+  fetch('https://api.com', {
+    next: {
+      revalidate: 60,
+      tags: ['hi'],
     },
   })
-
-  return products
 }
 
 const getCachedProducts = nextCache(getProducts, ['product-detail'], {
@@ -37,8 +32,7 @@ const ProductsPage = async () => {
   const products = await getCachedProducts()
   const revalidate = async () => {
     'use server'
-    // 경로와 연관되어있는 모든 데이터 새로고침
-    revalidateTag('product-detail')
+    revalidatePath('/home')
   }
 
   return (
