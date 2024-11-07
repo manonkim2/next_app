@@ -5,6 +5,7 @@ import { UserIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { unstable_cache as NextCache } from 'next/cache'
 
 const getIsOwner = async (userId: number) => {
   const session = await getSession()
@@ -17,6 +18,7 @@ const getIsOwner = async (userId: number) => {
 }
 
 const getProduct = async (id: number) => {
+  console.log('~!~!~!~!~!~!~!~!~!~!~!')
   const product = db.product.findUnique({
     where: {
       id,
@@ -34,7 +36,37 @@ const getProduct = async (id: number) => {
   return product
 }
 
-// todo : 삭제기능
+const getCachedProduct = NextCache(getProduct, ['product-detail'], {
+  tags: ['product-detail'],
+})
+
+const getProductTitle = async (id: number) => {
+  const product = await db.product.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      title: true,
+    },
+  })
+
+  return product
+}
+
+const getCachedProductTitle = NextCache(getProductTitle, ['product-title'], {
+  tags: ['product-title'],
+})
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { id: string }
+}) => {
+  const product = await getCachedProductTitle(Number(params.id))
+  return { title: product?.title }
+}
+
+export // todo : 삭제기능
 // const deleteProduct = async (id: number) => {
 //   await db.product.deleteMany({
 //     where: {
@@ -52,7 +84,7 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
     return notFound()
   }
 
-  const product = await getProduct(id)
+  const product = await getCachedProduct(id)
 
   if (!product) {
     return notFound()

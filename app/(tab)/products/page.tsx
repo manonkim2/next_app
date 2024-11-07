@@ -2,8 +2,14 @@ import ProductList from '@/components/product-list'
 import db from '@/lib/db'
 import { PlusIcon } from '@heroicons/react/24/solid'
 import { Prisma } from '@prisma/client'
+import { Metadata } from 'next'
 import { unstable_cache as nextCache, revalidateTag } from 'next/cache'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: '타이틀~~~~',
+  description: '~~~~~~',
+}
 
 // 해당 페이지를 dynamic한 페이지로 강제 지정 => 기본 caching기능 사용안함
 // ƒ  (Dynamic)  server-rendered on demand
