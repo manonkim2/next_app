@@ -66,7 +66,7 @@ export const generateMetadata = async ({
   return { title: product?.title }
 }
 
-export // todo : 삭제기능
+// todo : 삭제기능
 // const deleteProduct = async (id: number) => {
 //   await db.product.deleteMany({
 //     where: {
@@ -147,6 +147,17 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
       </div>
     </div>
   )
+}
+
+export const generateStaticParams = async () => {
+  // 배열을 반환해야 됨
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  })
+
+  return products.map((product) => ({ id: product.id + '' }))
 }
 
 export default ProductDetail
