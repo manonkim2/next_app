@@ -149,6 +149,11 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
   )
 }
 
+// 미리 생성되지 않은 페이지들은 dynamic페이지로 간주
+// true (default) -> 한번 방문하면 html이 저장되어서 static 페이지로 바뀜
+// false -> 빌드할때 생성된 페이지만 진입가능
+export const dynamicParams = true
+
 export const generateStaticParams = async () => {
   // 배열을 반환해야 됨
   const products = await db.product.findMany({
