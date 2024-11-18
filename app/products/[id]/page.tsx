@@ -4,7 +4,7 @@ import { formatToWon } from '@/lib/utils'
 import { UserIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { unstable_cache as NextCache } from 'next/cache'
 
 const getIsOwner = async (userId: number) => {
@@ -18,7 +18,6 @@ const getIsOwner = async (userId: number) => {
 }
 
 const getProduct = async (id: number) => {
-  console.log('~!~!~!~!~!~!~!~!~!~!~!')
   const product = db.product.findUnique({
     where: {
       id,
@@ -92,6 +91,27 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
 
   const isOwner = await getIsOwner(product.userId)
 
+  const createChatRoom = async () => {
+    'use server'
+    const session = await getSession()
+    const room = await db.chatRoom.create({
+      data: {
+        users: {
+          connect: [
+            // 판매자
+            { id: product.userId },
+            // 구매자
+            { id: session.id },
+          ],
+        },
+      },
+      select: {
+        id: true,
+      },
+    })
+    redirect(`/chats/${room.id}`)
+  }
+
   return (
     <div>
       <div className="relative aspect-square">
@@ -137,12 +157,11 @@ const ProductDetail = async ({ params }: { params: { id: string } }) => {
               삭제하기
             </button>
           )}
-          <Link
-            className="rounded-md bg-orange-500 px-2 py-2.5 font-semibold text-white"
-            href={``}
-          >
-            채팅하기
-          </Link>
+          <form action={createChatRoom}>
+            <button className="rounded-md bg-orange-500 px-2 py-2.5 font-semibold text-white">
+              채팅하기
+            </button>
+          </form>
         </div>
       </div>
     </div>
