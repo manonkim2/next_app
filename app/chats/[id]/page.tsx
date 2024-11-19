@@ -62,7 +62,13 @@ const ChatRoomPage = async ({ params }: { params: { id: string } }) => {
   console.log('🚀 ~ ChatRoomPage ~ initailMessages:', initailMessages)
   const session = await getSession()
 
-  return <ChatMessage userId={session.id!} initialMessages={initailMessages} />
+  return (
+    <ChatMessage
+      userId={session.id!}
+      initialMessages={initailMessages}
+      chatRoomId={params.id}
+    />
+  )
 }
 
 export default ChatRoomPage
