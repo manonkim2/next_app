@@ -15,12 +15,16 @@ interface IchatMessageProps {
   initialMessages: InitialChatMessages
   userId: number
   chatRoomId: string
+  username: string
+  avatar: string
 }
 
 const ChatMessage = ({
   initialMessages,
   userId,
   chatRoomId,
+  username,
+  avatar,
 }: IchatMessageProps) => {
   /**
    * @description useRef
@@ -60,7 +64,16 @@ const ChatMessage = ({
     channel.current?.send({
       type: 'broadcast',
       event: 'message',
-      payload: { message },
+      payload: {
+        id: Date.now(),
+        payload: message,
+        create_at: new Date(),
+        userId,
+        user: {
+          username,
+          avatar,
+        },
+      },
     })
 
     setMessage('')
@@ -73,7 +86,7 @@ const ChatMessage = ({
 
     channel.current
       .on('broadcast', { event: 'message' }, (payload) => {
-        console.log(payload)
+        setMessages((prevMsgs) => [...prevMsgs, payload.payload])
       })
       .subscribe()
 
