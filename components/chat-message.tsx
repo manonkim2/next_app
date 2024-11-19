@@ -1,6 +1,7 @@
 'use client'
 
 import { InitialChatMessages } from '@/app/chats/[id]/page'
+import { saveMessage } from '@/app/chats/actions'
 import { formatToTimeAgo } from '@/lib/utils'
 import { ArrowUpCircleIcon } from '@heroicons/react/24/solid'
 import { createClient, RealtimeChannel } from '@supabase/supabase-js'
@@ -44,7 +45,7 @@ const ChatMessage = ({
     setMessage(value)
   }
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setMessages((prevMsgs) => [
       ...prevMsgs,
@@ -76,6 +77,7 @@ const ChatMessage = ({
       },
     })
 
+    await saveMessage(message, chatRoomId)
     setMessage('')
   }
 
