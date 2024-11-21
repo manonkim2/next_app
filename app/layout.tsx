@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Bokor, Montserrat, Raleway } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
 const raleway = Raleway({
@@ -14,6 +15,11 @@ const bokor = Bokor({
   weight: ['400'],
   style: ['normal'],
   variable: '--bokor-text',
+})
+
+const nanum = localFont({
+  src: '/NanumBarunpenR.ttf',
+  variable: '--nanum-text',
 })
 
 export const metadata: Metadata = {
@@ -32,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`mx-auto mb-28 max-w-screen-sm bg-neutral-900 text-white ${bokor.variable} ${raleway.variable}`}
+        className={`mx-auto mb-28 max-w-screen-sm bg-neutral-900 text-white ${bokor.variable} ${raleway.variable} ${nanum.variable}`}
         // style={raleway.style}
       >
         {children}

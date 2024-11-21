@@ -21,6 +21,7 @@ const config: Config = {
       fontFamily: {
         releway: 'var(--raleway-text)',
         bokor: 'var(--bokor-text)',
+        nanum: 'var(--nanum-text)',
       },
     },
   },
