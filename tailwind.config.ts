@@ -18,6 +18,10 @@ const config: Config = {
         primary: '#ffc107',
         secondary: '#2979ff',
       },
+      fontFamily: {
+        releway: 'var(--raleway-text)',
+        bokor: 'var(--bokor-text)',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],

@@ -1,8 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Bokor, Montserrat, Raleway } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const raleway = Raleway({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  style: ['normal'],
+  variable: '--raleway-text',
+})
+
+const bokor = Bokor({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal'],
+  variable: '--bokor-text',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +32,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} mx-auto mb-28 max-w-screen-sm bg-neutral-900 text-white`}
+        className={`mx-auto mb-28 max-w-screen-sm bg-neutral-900 text-white ${bokor.variable} ${raleway.variable}`}
+        // style={raleway.style}
       >
         {children}
       </body>
